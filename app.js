@@ -4,6 +4,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
+const authMiddleware = require("./middlewares/authMiddleware");
+const authRoutes = require("./routes/authRoutes");
+const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
 
@@ -12,11 +15,15 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan("combined"));
+app.use(errorMiddleware);
 
 // Basic route for testing
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the Twitter Clone API!" });
 });
+
+// Auth routes
+app.use("/auth", authRoutes);
 
 // Connect to the database
 connectDB();
