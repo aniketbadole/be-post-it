@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const connectDB = require("./config/db");
 const authMiddleware = require("./middlewares/authMiddleware");
 const authRoutes = require("./routes/authRoutes");
+const tweetsRoutes = require("./routes/tweetRoutes");
+const userRoutes = require("./routes/userRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
@@ -24,6 +26,12 @@ app.get("/", (req, res) => {
 
 // Auth routes
 app.use("/auth", authRoutes);
+
+// User routes
+app.use("/users", userRoutes);
+
+// Tweets routes
+app.use("/tweets", tweetsRoutes);
 
 // Connect to the database
 connectDB();

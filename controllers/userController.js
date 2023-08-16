@@ -22,6 +22,7 @@ exports.createUser = async (req, res) => {
 // Get user details by username
 exports.getUserByUsername = async (req, res) => {
   try {
+    console.log("trying to get user ", req.params.username);
     const username = req.params.username;
     const user = await User.findOne({ username });
     if (!user) {
@@ -38,7 +39,10 @@ exports.getUserByUsername = async (req, res) => {
 // Update user profile
 exports.updateUserProfile = async (req, res) => {
   try {
+    console.log("Request received to update the user profile");
+    console.log("USer ID from token:", req.user.id);
     const userId = req.params.userId; // Assuming you're using a user's ID for identification
+    console.log("User ID from URL:", userId);
     const updates = req.body; // Updated fields sent in the request body
 
     const updatedUser = await User.findByIdAndUpdate(userId, updates, {

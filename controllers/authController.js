@@ -5,7 +5,7 @@ const User = require("../models/User");
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, name } = req.body;
 
     // Check if the email is already in use
     const existingUser = await User.findOne({ email });
@@ -21,12 +21,14 @@ exports.registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      name,
     });
 
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully." });
   } catch (error) {
+    // console.error(error);
     res
       .status(500)
       .json({ error: "An error occurred while registering the user." });
@@ -52,6 +54,8 @@ exports.loginUser = async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign({ user: { id: user._id } }, process.env.SECRET_KEY);
+
+    console.log(`User ${user._id} logged in.`);
 
     res.json({ token });
   } catch (error) {

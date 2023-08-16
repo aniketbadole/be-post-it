@@ -3,7 +3,9 @@ const Tweet = require("../models/Tweet");
 // Create a new tweet
 exports.createTweet = async (req, res) => {
   try {
+    console.log("Trying to post a tweet...");
     const { content, author } = req.body;
+    console.log(req.body, req.user);
     const newTweet = new Tweet({
       content,
       author,

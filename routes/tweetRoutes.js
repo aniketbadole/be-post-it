@@ -1,10 +1,13 @@
 const express = require("express");
 const tweetController = require("../controllers/tweetController");
+const retweetController = require("../controllers/retweetController");
+const likeController = require("../controllers/likeController");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
 // Create a new tweet
-router.post("/tweets", tweetController.createTweet);
+router.post("/tweets", authMiddleware, tweetController.createTweet);
 
 // Get tweets by a specific user
 router.get("/users/:userId/tweets", tweetController.getTweetsByUser);
