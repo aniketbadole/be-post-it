@@ -4,8 +4,10 @@ const Tweet = require("../models/Tweet");
 exports.createTweet = async (req, res) => {
   try {
     console.log("Trying to post a tweet...");
-    const { content, author } = req.body;
-    console.log(req.body, req.user);
+    const { content } = req.body;
+    const author = req.user.id;
+    console.log("content:", content);
+    console.log("author:", author);
     const newTweet = new Tweet({
       content,
       author,
@@ -16,19 +18,6 @@ exports.createTweet = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while creating the tweet." });
-  }
-};
-
-// Get tweets by a specific user
-exports.getTweetsByUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const tweets = await Tweet.find({ author: userId });
-    res.json(tweets);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the tweets." });
   }
 };
 

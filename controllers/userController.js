@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Tweet = require("../models/Tweet");
 
 // Create a new user
 exports.createUser = async (req, res) => {
@@ -59,5 +60,20 @@ exports.updateUserProfile = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while updating user profile." });
+  }
+};
+
+// Get tweets by a specific user
+exports.getTweetsByUser = async (req, res) => {
+  try {
+    console.log("here at least");
+    const userId = req.params.userId;
+    console.log(userId);
+    const tweets = await Tweet.find({ author: userId });
+    res.json(tweets);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the tweets." });
   }
 };

@@ -9,9 +9,6 @@ const router = express.Router();
 // Create a new tweet
 router.post("/tweets", authMiddleware, tweetController.createTweet);
 
-// Get tweets by a specific user
-router.get("/users/:userId/tweets", tweetController.getTweetsByUser);
-
 // Delete a tweet
 router.delete("/tweets/:tweetId", authMiddleware, tweetController.deleteTweet);
 

@@ -56,6 +56,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign({ user: { id: user._id } }, process.env.SECRET_KEY);
 
     console.log(`User ${user._id} logged in.`);
+    console.log(process.env.SECRET_KEY);
 
     res.json({ token });
   } catch (error) {
