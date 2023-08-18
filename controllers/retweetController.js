@@ -3,26 +3,41 @@ const Tweet = require("../models/Tweet");
 // Create a retweet
 exports.createRetweet = async (req, res) => {
   try {
-    const { tweetId, userId } = req.body; // Assuming you're passing the tweet ID and user ID
+    const tweetId = req.params.tweetId;
+    const userId = req.user.id;
+
+    // Check if the user has already retweeted this tweet
+    const existingRetweet = await Tweet.findOne({
+      originalTweet: tweetId,
+      author: userId,
+    });
+
+    if (existingRetweet) {
+      return res
+        .status(400)
+        .json({ error: "You have already retweeted this tweet." });
+    }
 
     // Find the original tweet
     const originalTweet = await Tweet.findById(tweetId);
     if (!originalTweet) {
-      return res.status(404).json({ message: "Original tweet not found." });
+      return res.status(404).json({ error: "Original tweet not found." });
     }
 
-    // Check if the user has already retweeted this tweet
-    if (originalTweet.retweets.includes(userId)) {
-      return res
-        .status(400)
-        .json({ message: "You have already retweeted this tweet." });
-    }
+    // Create a new tweet as a retweet
+    const newRetweet = new Tweet({
+      content: originalTweet.content,
+      author: userId,
+      originalTweet: originalTweet._id,
+    });
 
-    // Add the user to the retweets array and save the tweet
-    originalTweet.retweets.push(userId);
+    await newRetweet.save();
+
+    // Update the retweet array and user list of the original tweet
+    originalTweet.retweets.push(newRetweet._id);
     await originalTweet.save();
 
-    res.status(201).json(originalTweet);
+    res.status(201).json({ message: "Retweet created successfully." });
   } catch (error) {
     res
       .status(500)
@@ -33,26 +48,30 @@ exports.createRetweet = async (req, res) => {
 // Undo a retweet
 exports.undoRetweet = async (req, res) => {
   try {
-    const { tweetId, userId } = req.body; // Assuming you're passing the tweet ID and user ID
+    const tweetId = req.params.tweetId;
+    const userId = req.user.id;
 
-    // Find the tweet
-    const tweet = await Tweet.findById(tweetId);
-    if (!tweet) {
-      return res.status(404).json({ message: "Tweet not found." });
+    // Find the retweet to be undone
+    const retweet = await Tweet.findOne({
+      _id: tweetId, // This should be the retweet ID
+      author: userId,
+    });
+
+    if (!retweet) {
+      return res.status(404).json({ error: "Retweet not found." });
     }
 
-    // Check if the user has retweeted the tweet
-    if (!tweet.retweets.includes(userId)) {
-      return res
-        .status(400)
-        .json({ message: "You have not retweeted this tweet." });
+    // Remove the retweet's ID from the original tweet's retweets array
+    const originalTweet = await Tweet.findById(retweet.originalTweet);
+    if (originalTweet) {
+      originalTweet.retweets.pull(retweet._id);
+      await originalTweet.save();
     }
 
-    // Remove the user from the retweets array and save the tweet
-    tweet.retweets.pull(userId);
-    await tweet.save();
+    // Delete the retweet
+    await retweet.deleteOne();
 
-    res.status(200).json(tweet);
+    res.json({ message: "Retweet undone successfully." });
   } catch (error) {
     res
       .status(500)

@@ -13,15 +13,23 @@ router.post("/tweets", authMiddleware, tweetController.createTweet);
 router.delete("/tweets/:tweetId", authMiddleware, tweetController.deleteTweet);
 
 // Create a retweet
-router.post("/retweets", retweetController.createRetweet);
+router.post(
+  "/:tweetId/retweet",
+  authMiddleware,
+  retweetController.createRetweet
+);
 
 // Undo a retweet
-router.delete("/retweets", retweetController.undoRetweet);
+router.delete(
+  "/:tweetId/undoretweet",
+  authMiddleware,
+  retweetController.undoRetweet
+);
 
 // Like a tweet
 router.post("/:tweetId/like", authMiddleware, likeController.likeTweet);
 
 // Undo a like
-router.delete("/likes", likeController.undoLike);
+router.delete("/:tweetId/undolike", authMiddleware, likeController.undoLike);
 
 module.exports = router;

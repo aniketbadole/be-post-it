@@ -34,7 +34,8 @@ exports.likeTweet = async (req, res) => {
 // Undo a like
 exports.undoLike = async (req, res) => {
   try {
-    const { tweetId, userId } = req.body; // Assuming you're passing the tweet ID and user ID
+    const { tweetId } = req.params; // Assuming you're passing the tweet ID and user ID
+    const userId = req.user.id;
 
     // Find the tweet
     const tweet = await Tweet.findById(tweetId);
