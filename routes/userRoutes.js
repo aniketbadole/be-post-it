@@ -11,6 +11,6 @@ router.get("/users/:username", userController.getUserByUsername);
 router.put("/users/:userId", authMiddleware, userController.updateUserProfile);
 
 // Get tweets by a specific user
-router.get("/users/:userId/tweets", userController.getTweetsByUser);
+router.get("/users/:username/tweets", userController.getTweetsByUser);
 
 module.exports = router;

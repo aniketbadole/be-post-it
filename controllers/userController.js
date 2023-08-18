@@ -67,9 +67,13 @@ exports.updateUserProfile = async (req, res) => {
 exports.getTweetsByUser = async (req, res) => {
   try {
     console.log("here at least");
-    const userId = req.params.userId;
-    console.log(userId);
-    const tweets = await Tweet.find({ author: userId });
+    const username = req.params.username;
+    console.log(username);
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const tweets = await Tweet.find({ author: user._id });
     res.json(tweets);
   } catch (error) {
     res
