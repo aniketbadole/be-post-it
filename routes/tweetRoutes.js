@@ -19,7 +19,7 @@ router.post("/retweets", retweetController.createRetweet);
 router.delete("/retweets", retweetController.undoRetweet);
 
 // Like a tweet
-router.post("/likes", likeController.likeTweet);
+router.post("/:tweetId/like", authMiddleware, likeController.likeTweet);
 
 // Undo a like
 router.delete("/likes", likeController.undoLike);

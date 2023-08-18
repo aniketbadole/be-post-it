@@ -3,7 +3,8 @@ const Tweet = require("../models/Tweet");
 // Like a tweet
 exports.likeTweet = async (req, res) => {
   try {
-    const { tweetId, userId } = req.body; // Assuming you're passing the tweet ID and user ID
+    const tweetId = req.params.tweetId;
+    const userId = req.user.id;
 
     // Find the tweet
     const tweet = await Tweet.findById(tweetId);
