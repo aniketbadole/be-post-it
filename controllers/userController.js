@@ -158,7 +158,7 @@ exports.changePassword = async (req, res) => {
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, "_id username profilePicture");
+    const users = await User.find({}, "_id name username profilePicture");
     res.json(users);
   } catch (error) {
     res
