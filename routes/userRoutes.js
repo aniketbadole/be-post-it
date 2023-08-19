@@ -20,11 +20,7 @@ router.post(
   userController.toggleFollowUser
 );
 
-router.put(
-  "/users/changepassword",
-  authMiddleware,
-  userController.changePassword
-);
+router.put("/changepassword", authMiddleware, userController.changePassword);
 
 router.get("/users", userController.getAllUsers);
 
