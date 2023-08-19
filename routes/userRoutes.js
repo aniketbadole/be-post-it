@@ -21,11 +21,11 @@ router.post(
 );
 
 router.put(
-  "users/changepassword",
+  "/users/changepassword",
   authMiddleware,
   userController.changePassword
 );
 
-router.get("users/all", userController.getAllUsers);
+router.get("/users", userController.getAllUsers);
 
 module.exports = router;
