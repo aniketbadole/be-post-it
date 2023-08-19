@@ -50,3 +50,20 @@ exports.deleteTweet = async (req, res) => {
       .json({ error: "An error occurred while deleting the tweet." });
   }
 };
+
+exports.showTweet = async (req, res) => {
+  try {
+    const { tweetId } = req.params;
+
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) {
+      return res.status(403).json({ message: "Tweet not found" });
+    }
+
+    res.json(tweet);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occured while retrieving the tweet" });
+  }
+};

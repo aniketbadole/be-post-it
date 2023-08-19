@@ -32,4 +32,7 @@ router.post("/:tweetId/like", authMiddleware, likeController.likeTweet);
 // Undo a like
 router.delete("/:tweetId/undolike", authMiddleware, likeController.undoLike);
 
+// Get a tweet
+router.get("/tweets/:tweetId", tweetController.showTweet);
+
 module.exports = router;

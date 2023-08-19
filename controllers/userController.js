@@ -25,7 +25,7 @@ exports.getUserByUsername = async (req, res) => {
   try {
     console.log("trying to get user ", req.params.username);
     const username = req.params.username;
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }

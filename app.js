@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const tweetsRoutes = require("./routes/tweetRoutes");
 const userRoutes = require("./routes/userRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
+const timelineRoute = require("./routes/timelineRoute");
 
 const app = express();
 
@@ -32,6 +33,9 @@ app.use("/users", userRoutes);
 
 // Tweets routes
 app.use("/tweets", tweetsRoutes);
+
+// Timeline route
+app.use("/timeline", timelineRoute);
 
 // Connect to the database
 connectDB();
