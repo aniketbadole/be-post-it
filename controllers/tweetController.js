@@ -24,7 +24,8 @@ exports.createTweet = async (req, res) => {
 // Delete a tweet
 exports.deleteTweet = async (req, res) => {
   try {
-    const tweetId = req.params.tweetId; // Assuming you're using a tweet's ID for identification
+    const { tweetId } = req.params; // Assuming you're using a tweet's ID for identification
+    const userId = req.user.id;
 
     // Find the tweet
     const tweet = await Tweet.findById(tweetId);
@@ -33,14 +34,14 @@ exports.deleteTweet = async (req, res) => {
     }
 
     // Check if the logged-in user is the author of the tweet
-    if (tweet.author.toString() !== req.user.id) {
+    if (tweet.author.toString() !== userId) {
       return res
         .status(403)
         .json({ message: "You do not have permission to delete this tweet." });
     }
 
     // Delete the tweet
-    await tweet.remove();
+    await tweet.deleteOne();
 
     res.status(200).json({ message: "Tweet deleted successfully." });
   } catch (error) {
