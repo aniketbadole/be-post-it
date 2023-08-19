@@ -13,4 +13,11 @@ router.put("/users/:userId", authMiddleware, userController.updateUserProfile);
 // Get tweets by a specific user
 router.get("/users/:username/tweets", userController.getTweetsByUser);
 
+// Follow or unfollow a user
+router.post(
+  "/users/:targetUserId/follow",
+  authMiddleware,
+  userController.toggleFollowUser
+);
+
 module.exports = router;

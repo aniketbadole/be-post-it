@@ -81,3 +81,44 @@ exports.getTweetsByUser = async (req, res) => {
       .json({ error: "An error occurred while fetching the tweets." });
   }
 };
+
+// Follow or unfollow a user
+exports.toggleFollowUser = async (req, res) => {
+  try {
+    const { targetUserId } = req.params;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    const targetUser = await User.findById(targetUserId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const isFollowing = user.following.includes(targetUserId.toString());
+
+    if (isFollowing) {
+      // Unfollow user
+      user.following = user.following.filter(
+        (id) => id.toString() !== targetUserId
+      );
+    } else {
+      // Follow user
+      user.following.push(targetUserId);
+      targetUser.followers.push(userId);
+    }
+
+    await user.save();
+    await targetUser.save();
+
+    res.json({
+      message: `${isFollowing ? "Unfollowed" : "Followed"} ${
+        targetUser.name
+      } successfully.`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "An error occurred while following/unfollowing the user.",
+    });
+  }
+};
