@@ -8,6 +8,11 @@ exports.getTimelineTweets = async (req, res) => {
     const userId = req.user.id; // Logged-in user's ID
     const user = await User.findById(userId);
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const skip = (page - 1) * limit;
+
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
@@ -17,6 +22,8 @@ exports.getTimelineTweets = async (req, res) => {
     // Retrieve tweets from the following users
     const timelineTweets = await Tweet.find({ author: { $in: followingUsers } })
       .sort({ createdAt: -1 }) // Sort by createdAt in descending order (most recent first)
+      .skip(skip)
+      .limit(limit)
       .populate("author", "_id username"); // Populate the author field to get user details
 
     res.json(timelineTweets);

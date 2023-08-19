@@ -20,4 +20,12 @@ router.post(
   userController.toggleFollowUser
 );
 
+route.put(
+  "users/changepassword",
+  authMiddleware,
+  userController.changePassword
+);
+
+route.get("users/all", userController.getAllUsers);
+
 module.exports = router;

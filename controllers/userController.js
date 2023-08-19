@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Tweet = require("../models/Tweet");
+const bcrypt = require("bcrypt");
 
 // Create a new user
 exports.createUser = async (req, res) => {
@@ -120,5 +121,48 @@ exports.toggleFollowUser = async (req, res) => {
     res.status(500).json({
       error: "An error occurred while following/unfollowing the user.",
     });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Current password is incorrect" });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.json({ message: "Password changed successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occured while updating the password" });
+  }
+};
+
+// Get all users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "_id username profilePicture");
+    res.json(users);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occured while fetching the users" });
   }
 };
