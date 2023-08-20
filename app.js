@@ -10,6 +10,7 @@ const tweetsRoutes = require("./routes/tweetRoutes");
 const userRoutes = require("./routes/userRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const timelineRoute = require("./routes/timelineRoute");
+const searchRoute = require("./routes/searchRoute");
 
 const app = express();
 
@@ -36,6 +37,9 @@ app.use("/tweets", tweetsRoutes);
 
 // Timeline route
 app.use("/timeline", timelineRoute);
+
+// Search route
+app.use("/search", searchRoute);
 
 // Connect to the database
 connectDB();
