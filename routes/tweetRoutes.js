@@ -9,6 +9,13 @@ const router = express.Router();
 // Create a new tweet
 router.post("/tweets", authMiddleware, tweetController.createTweet);
 
+// Create a reply tweet
+router.post(
+  "/tweets/:tweetId/replies",
+  authMiddleware,
+  tweetController.createReply
+);
+
 // Delete a tweet
 router.delete("/tweets/:tweetId", authMiddleware, tweetController.deleteTweet);
 

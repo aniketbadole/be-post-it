@@ -8,7 +8,7 @@ exports.createRetweet = async (req, res) => {
 
     // Check if the user has already retweeted this tweet
     const existingRetweet = await Tweet.findOne({
-      originalTweet: tweetId,
+      retweetedTweet: tweetId,
       author: userId,
     });
 
@@ -19,23 +19,23 @@ exports.createRetweet = async (req, res) => {
     }
 
     // Find the original tweet
-    const originalTweet = await Tweet.findById(tweetId);
-    if (!originalTweet) {
+    const retweetedTweet = await Tweet.findById(tweetId);
+    if (!retweetedTweet) {
       return res.status(404).json({ error: "Original tweet not found." });
     }
 
     // Create a new tweet as a retweet
     const newRetweet = new Tweet({
-      content: originalTweet.content,
+      content: retweetedTweet.content,
       author: userId,
-      originalTweet: originalTweet._id,
+      retweetedTweet: retweetedTweet._id,
     });
 
     await newRetweet.save();
 
     // Update the retweet array and user list of the original tweet
-    originalTweet.retweets.push(newRetweet._id);
-    await originalTweet.save();
+    retweetedTweet.retweets.push(newRetweet._id);
+    await retweetedTweet.save();
 
     res.status(201).json({ message: "Retweet created successfully." });
   } catch (error) {
@@ -62,10 +62,10 @@ exports.undoRetweet = async (req, res) => {
     }
 
     // Remove the retweet's ID from the original tweet's retweets array
-    const originalTweet = await Tweet.findById(retweet.originalTweet);
-    if (originalTweet) {
-      originalTweet.retweets.pull(retweet._id);
-      await originalTweet.save();
+    const retweetedTweet = await Tweet.findById(retweet.retweetedTweet);
+    if (retweetedTweet) {
+      retweetedTweet.retweets.pull(retweet._id);
+      await retweetedTweet.save();
     }
 
     // Delete the retweet

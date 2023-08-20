@@ -37,6 +37,10 @@ const tweetSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tweet",
   },
+  retweetedTweet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tweet",
+  },
   retweets: [
     {
       type: mongoose.Schema.Types.ObjectId,

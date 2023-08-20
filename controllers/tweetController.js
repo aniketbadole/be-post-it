@@ -67,3 +67,34 @@ exports.showTweet = async (req, res) => {
       .json({ error: "An error occured while retrieving the tweet" });
   }
 };
+
+exports.createReply = async (req, res) => {
+  try {
+    const { tweetId } = req.params;
+    const { content } = req.body;
+    const author = req.user.id;
+
+    const originalTweet = await Tweet.findById(tweetId);
+    if (!originalTweet) {
+      return res.status(404).json({ message: "Tweet not found" });
+    }
+
+    const newTweet = new Tweet({
+      content,
+      author,
+      originalTweet: originalTweet._id,
+    });
+
+    await newTweet.save();
+
+    originalTweet.mentions.push(newTweet._id);
+    await originalTweet.save();
+
+    res.status(201).json({ message: "Reply tweet created successfully" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occured while creating the reply tweet" });
+  }
+};
