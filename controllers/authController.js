@@ -63,3 +63,15 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: "An error occurred while logging in." });
   }
 };
+
+// Logout
+exports.logoutUser = async (req, res) => {
+  try {
+    // Clear the token from the client (cookies or local storage)
+    // For example, if using cookies:
+    res.clearCookie("token");
+    res.status(200).json({ message: "Logged out successfully." });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while logging out." });
+  }
+};

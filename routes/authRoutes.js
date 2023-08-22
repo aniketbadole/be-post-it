@@ -10,4 +10,7 @@ router.post("/register", validateRequest, authController.registerUser);
 // Login user
 router.post("/login", validateRequest, authController.loginUser);
 
+// Logout
+router.post("/logout", authController.logoutUser);
+
 module.exports = router;
