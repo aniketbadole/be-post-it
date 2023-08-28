@@ -67,14 +67,23 @@ exports.updateUserProfile = async (req, res) => {
 // Get tweets by a specific user
 exports.getTweetsByUser = async (req, res) => {
   try {
-    console.log("here at least");
     const username = req.params.username;
-    console.log(username);
     const user = await User.findOne({ username });
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const tweets = await Tweet.find({ author: user._id });
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const skip = (page - 1) * limit;
+
+    const tweets = await Tweet.find({ author: user._id })
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order (most recent first)
+      .skip(skip)
+      .limit(limit);
+
     res.json(tweets);
   } catch (error) {
     res

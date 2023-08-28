@@ -19,12 +19,13 @@ exports.getTimelineTweets = async (req, res) => {
 
     const followingUsers = user.following; // List of users the logged-in user is following
 
+    followingUsers.push(userId);
     // Retrieve tweets from the following users
     const timelineTweets = await Tweet.find({ author: { $in: followingUsers } })
       .sort({ createdAt: -1 }) // Sort by createdAt in descending order (most recent first)
       .skip(skip)
       .limit(limit)
-      .populate("author", "_id username"); // Populate the author field to get user details
+      .populate("author", "_id username name"); // Populate the author field to get user details
 
     res.json(timelineTweets);
   } catch (error) {
